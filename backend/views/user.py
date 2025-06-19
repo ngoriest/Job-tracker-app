@@ -3,6 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from backend.models import db, User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
+from flask_mail import Message
+from app import app, mail
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -42,6 +44,22 @@ def register_user():
             "created_at": new_user.created_at.isoformat()
         }
     }), 201
+
+    # Sending a welcome email to the new user
+    try:
+        msg = Message("Welcome to Job Tracker",
+                      sender=app.config['MAIL_DEFAULT_SENDER'],
+                      recipients=[data['email']])
+        msg.body = f"Hello {data['username']},\n\nThank you for registering with Job Tracker!\n\nBest regards,\nJob Tracker Team"
+        mail.send(msg)
+        db.session.commit()
+        return jsonify({"success": "User created successfully"}), 201
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        return jsonify({"message": "User registered, but failed to send welcome email"}), 201
+    
+    
+
 
 # Get User by ID
 @user_bp.route('/users/<int:user_id>', methods=['GET'])
@@ -102,6 +120,21 @@ def update_user(user_id):
             "email": user.email
         }
     }), 200
+    #  send an email when user updates their information
+    try:
+        msg = Message(subject="Alert! Profile Update",
+        recipients=[email],
+        sender=app.config['MAIL_DEFAULT_SENDER'],
+        body=f"Hello {user.username},\n\nYour profile has been updated successfully on StackOverflow Clone.\n\nBest regards,\nStackOverflow Clone Team")
+        mail.send(msg)        
+        # Commit the new user to the database after sending the email
+        db.session.commit()
+        return jsonify({"success":"User updated successfully"}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Failed to regsiter/send welcome email"}), 400
+   
 
 # Delete User
 @user_bp.route('/users/<int:user_id>', methods=['DELETE'])
