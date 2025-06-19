@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.models import db, User, Application, Category, Task
+from models import db, User, Application, Category, Task
 
 admin_bp = Blueprint('admin_bp', __name__)
 

@@ -1,11 +1,10 @@
 from datetime import timedelta
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, jsonify
+from models import db
 from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_jwt_extended import JWTManager
-from flask_cors import CORS  
-
+from flask_cors import CORS
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -15,7 +14,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///job_tracker.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+
 migrate = Migrate(app, db)
 db.init_app(app)
 

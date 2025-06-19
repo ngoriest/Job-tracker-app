@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.models import db, Category, Application
+from models import db, Category, Application
 
 category_bp = Blueprint('category_bp', __name__)
 

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend.models import db, User
+from models import db, User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from flask_mail import Message
@@ -125,7 +125,7 @@ def update_user(user_id):
         msg = Message(subject="Alert! Profile Update",
         recipients=[email],
         sender=app.config['MAIL_DEFAULT_SENDER'],
-        body=f"Hello {user.username},\n\nYour profile has been updated successfully on StackOverflow Clone.\n\nBest regards,\nStackOverflow Clone Team")
+        body=f"Hello {user.username},\n\nYour profile has been updated successfully on JOB TRACKER.\n\nBest regards,\nJOB TRACKER Team")
         mail.send(msg)        
         # Commit the new user to the database after sending the email
         db.session.commit()
