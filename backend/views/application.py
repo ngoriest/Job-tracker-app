@@ -17,7 +17,7 @@ def application_to_dict(app):
         "user_id": app.user_id
     }
 
-# ✅ Create application
+# Create application
 @application_bp.route("/applications", methods=["POST"])
 @jwt_required()
 def create_application():
@@ -30,7 +30,8 @@ def create_application():
         print("❌ Failed to parse JSON:", e)
         return jsonify({"error": "Invalid JSON", "details": str(e)}), 400
 
-    user_id = get_jwt_identity()
+    # Convert string user_id back to int
+    user_id = int(get_jwt_identity())
     print("🔐 User ID:", user_id)
 
     # Basic validation
@@ -62,20 +63,20 @@ def create_application():
         print("❌ Error while saving application:", e)
         return jsonify({"error": "Failed to create application", "details": str(e)}), 422
 
-# ✅ Get all applications
+# Get all applications
 @application_bp.route("/applications", methods=["GET"])
 @jwt_required()
 def get_applications():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     apps = Application.query.filter_by(user_id=user_id).all()
     return jsonify({"applications": [application_to_dict(app) for app in apps]}), 200
 
-# ✅ Update application
+# Update application
 @application_bp.route("/applications/<int:app_id>", methods=["PATCH"])
 @jwt_required()
 def update_application(app_id):
     data = request.get_json()
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     app = Application.query.filter_by(id=app_id, user_id=user_id).first()
 
     if not app:
@@ -104,12 +105,13 @@ def update_application(app_id):
         traceback.print_exc()
         return jsonify({"error": f"Update failed: {str(e)}"}), 422
 
-# ✅ Delete application
+# Delete application
 @application_bp.route("/applications/<int:app_id>", methods=["DELETE"])
 @jwt_required()
 def delete_application(app_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     app = Application.query.filter_by(id=app_id, user_id=user_id).first()
+    
     if not app:
         return jsonify({"error": "Application not found"}), 404
 

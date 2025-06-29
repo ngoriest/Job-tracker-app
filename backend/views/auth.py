@@ -21,11 +21,13 @@ def login():
         return jsonify({"error": "Email and password are required"}), 400
 
     user = User.query.filter_by(email=email).first()
+
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    access_token = create_access_token(identity=user.id)
-
+    # FIX: Convert user.id to string
+    access_token = create_access_token(identity=str(user.id))
+    
     return jsonify({
         "access_token": access_token,
         "user_id": user.id,
@@ -35,7 +37,8 @@ def login():
 @auth_bp.route("/current_user", methods=["GET"])
 @jwt_required()
 def current_user():
-    user_id = get_jwt_identity()
+    # FIX: Convert back to int since get_jwt_identity() now returns string
+    user_id = int(get_jwt_identity())
     user = User.query.get(user_id)
 
     if not user:

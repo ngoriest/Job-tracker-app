@@ -14,12 +14,10 @@ def serialize_task(task):
         "application_id": task.application_id,
     }
 
-# Create Task
 @task_bp.route("/tasks", methods=["POST"])
 @jwt_required()
 def create_task():
     data = request.get_json()
-    print("📥 Creating Task Payload:", data)
     user_id = get_jwt_identity()
 
     if not data.get("description"):
@@ -36,28 +34,19 @@ def create_task():
         due_date=datetime.fromisoformat(data["due_date"]) if data.get("due_date") else None,
         is_completed=data.get("is_completed", False),
         user_id=user_id,
-        application_id=app_id
+        application_id=app_id if app_id else None
     )
     db.session.add(new_task)
     db.session.commit()
-
     return jsonify(serialize_task(new_task)), 201
 
-# Read All Tasks
 @task_bp.route("/tasks", methods=["GET"])
 @jwt_required()
 def get_tasks():
     user_id = get_jwt_identity()
     tasks = Task.query.filter_by(user_id=user_id)
-
-    if "completed" in request.args:
-        tasks = tasks.filter_by(is_completed=request.args["completed"].lower() == "true")
-    if "application_id" in request.args:
-        tasks = tasks.filter_by(application_id=request.args["application_id"])
-
     return jsonify([serialize_task(task) for task in tasks]), 200
 
-# Update Task
 @task_bp.route("/tasks/<int:task_id>", methods=["PATCH"])
 @jwt_required()
 def update_task(task_id):
@@ -67,7 +56,6 @@ def update_task(task_id):
         return jsonify({"error": "Task not found"}), 404
 
     data = request.get_json()
-    print("🛠️ Updating Task Payload:", data)
 
     if "description" in data:
         task.description = data["description"].strip()
@@ -85,7 +73,6 @@ def update_task(task_id):
     db.session.commit()
     return jsonify(serialize_task(task)), 200
 
-# Delete Task
 @task_bp.route("/tasks/<int:task_id>", methods=["DELETE"])
 @jwt_required()
 def delete_task(task_id):
@@ -93,7 +80,6 @@ def delete_task(task_id):
     task = Task.query.filter_by(id=task_id, user_id=user_id).first()
     if not task:
         return jsonify({"error": "Task not found"}), 404
-
     db.session.delete(task)
     db.session.commit()
     return jsonify({"message": "Task deleted"}), 200

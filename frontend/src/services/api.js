@@ -22,6 +22,7 @@ export const apiFetch = async (endpoint, options = {}) => {
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   if (!response.ok) {

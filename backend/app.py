@@ -17,7 +17,7 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'thee.manase@gmail.com'
 app.config['MAIL_PASSWORD'] = 'tpct fyni fwzb rsmv'
-app.config['MAIL_DEFAULT_SENDER'] = ('Job Tracker', 'job-tracker@gmail.com')
+app.config['MAIL_DEFAULT_SENDER'] = 'thee.manase@gmail.com'
 app.config['JWT_SECRET_KEY'] = 'absdbdbggdnjdirumf'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=2)
 
@@ -36,9 +36,11 @@ CORS(app, origins="*", supports_credentials=True)
 from models import TokenBlocklist
 
 @jwt.token_in_blocklist_loader
-def check_if_token_revoked(jwt_header, jwt_payload):
-    jti = jwt_payload['jti']
-    return db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar() is not None
+def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
+    jti = jwt_payload["jti"]
+    token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
+
+    return token is not None
 
 # Register Blueprints (must be after app is initialized)
 from views import *
