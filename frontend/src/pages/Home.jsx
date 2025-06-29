@@ -1,133 +1,66 @@
-import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 
-const Home = () => {
-  const { user } = useAuth();
-  const [isHovered, setIsHovered] = useState(null);
-
-  // Animation variants
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
-
+export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <motion.div 
-          initial="hidden"
-          animate="show"
-          variants={container}
-          className="text-center"
-        >
-          <motion.h1 
-            variants={item}
-            className="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-600 sm:text-6xl lg:text-7xl mb-2"
+    <div className="max-w-4xl mx-auto p-6 text-center animate-fade-in">
+      <div className="bg-white dark:bg-dark-800 rounded-xl shadow-lg p-8 md:p-12">
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800 dark:text-gray-200">
+          Job Application Tracker
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+          Organize your job search, track applications, and manage tasks all in one place.
+        </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link
+            to="/login"
+            className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-md"
           >
-            Welcome to JobTracker
-          </motion.h1>
-          
-          <motion.p 
-            variants={item}
-            className="mt-6 max-w-2xl mx-auto text-xl text-gray-300"
+            Login
+          </Link>
+          <Link
+            to="/register"
+            className="bg-white dark:bg-dark-700 border border-primary-600 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-dark-600 px-6 py-3 rounded-lg font-medium transition-colors shadow-md"
           >
-            {user ? (
-              <>
-                <span className="text-indigo-400 font-medium">Hello, {user.username}!</span> Ready to supercharge your job search?
-              </>
-            ) : (
-              'Your all-in-one platform for managing job applications, interviews, and career growth'
-            )}
-          </motion.p>
+            Register
+          </Link>
+        </div>
+      </div>
 
-          <motion.div 
-            variants={item}
-            className="mt-12 flex justify-center"
-          >
-            {user ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {[
-                  { to: '/applications', text: 'Applications', icon: '📋' },
-                  { to: '/tasks', text: 'Tasks', icon: '✅' },
-                  { to: '/categories', text: 'Categories', icon: '🗂' }
-                ].map((link, index) => (
-                  <motion.div
-                    key={link.to}
-                    whileHover={{ y: -5 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                  >
-                    <Link
-                      to={link.to}
-                      className={`px-8 py-5 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 flex flex-col items-center transition-all duration-300 ${isHovered === index ? 'shadow-lg shadow-indigo-500/20' : ''}`}
-                      onMouseEnter={() => setIsHovered(index)}
-                      onMouseLeave={() => setIsHovered(null)}
-                    >
-                      <span className="text-3xl mb-3">{link.icon}</span>
-                      <span className="text-lg font-medium">{link.text}</span>
-                      <span className="mt-2 text-sm text-indigo-400">Explore →</span>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col sm:flex-row gap-4">
-                <motion.div whileHover={{ scale: 1.03 }}>
-                  <Link
-                    to="/login"
-                    className="px-8 py-4 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition-all"
-                  >
-                    Sign in
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                  <Link
-                    to="/register"
-                    className="px-8 py-4 rounded-lg bg-gray-800 border border-gray-700 text-white font-medium hover:bg-gray-700 transition-all"
-                  >
-                    Get Started
-                  </Link>
-                </motion.div>
-              </div>
-            )}
-          </motion.div>
-
-          {!user && (
-            <motion.div 
-              variants={item}
-              className="mt-16 bg-gray-800/50 p-6 rounded-xl border border-gray-700 max-w-3xl mx-auto"
-            >
-              <h3 className="text-xl font-semibold mb-3 text-indigo-400">Why JobTracker?</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[
-                  { icon: '⚡', title: 'Fast', desc: 'Lightning quick interface' },
-                  { icon: '🔒', title: 'Secure', desc: 'Your data is protected' },
-                  { icon: '📈', title: 'Effective', desc: 'Proven results' }
-                ].map((feature) => (
-                  <div key={feature.title} className="p-3 bg-gray-800/30 rounded-lg">
-                    <div className="text-2xl mb-2">{feature.icon}</div>
-                    <h4 className="font-medium">{feature.title}</h4>
-                    <p className="text-sm text-gray-400">{feature.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div className="bg-white dark:bg-dark-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+          <div className="text-primary-600 dark:text-primary-400 mb-4">
+            <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Track Applications</h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Keep all your job applications organized in one place with status tracking.
+          </p>
+        </div>
+        <div className="bg-white dark:bg-dark-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+          <div className="text-primary-600 dark:text-primary-400 mb-4">
+            <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Manage Tasks</h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Stay on top of your job search with task management and deadlines.
+          </p>
+        </div>
+        <div className="bg-white dark:bg-dark-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+          <div className="text-primary-600 dark:text-primary-400 mb-4">
+            <svg className="w-10 h-10 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Analyze Progress</h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Visualize your job search progress and identify areas for improvement.
+          </p>
+        </div>
       </div>
     </div>
   );
-};
-
-export default Home;
+}

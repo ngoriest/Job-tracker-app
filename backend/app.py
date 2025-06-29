@@ -1,61 +1,52 @@
 from datetime import timedelta
-from flask import Flask, request, jsonify
+from flask import Flask
 from models import db
 from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+
 # Initialize Flask app
 app = Flask(__name__)
-
-
 
 # Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///job_tracker.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
-migrate = Migrate(app, db)
-db.init_app(app)
-
-#flask cors
-CORS(app) 
-
-
-app.config['MAIL_SERVER'] = 'smtp.example.com'  
-app.config['MAIL_PORT'] = 587  
-app.config['MAIL_USE_TLS'] = True  
-app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'thee.manase@gmail.com'
 app.config['MAIL_PASSWORD'] = 'tpct fyni fwzb rsmv'
-app.config['MAIL_DEFAULT_SENDER'] = 'job-tracker@gmail.com'
-
-mail = Mail(app)
-
-#JWT Configuration
-app.config['JWT_SECRET_KEY'] = 'your-secret-key-here'  
+app.config['MAIL_DEFAULT_SENDER'] = ('Job Tracker', 'job-tracker@gmail.com')
+app.config['JWT_SECRET_KEY'] = 'absdbdbggdnjdirumf'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=2)
 
-#test
-app.config["JWT_VERIFY_SUB"] = False
-
-jwt = JWTManager(app)
+# Initialize extensions
+mail = Mail()
+jwt = JWTManager()
+db.init_app(app)
+mail.init_app(app)
 jwt.init_app(app)
+migrate = Migrate(app, db)
 
-#register blueprints
-from views import (
-    auth_bp,
-    user_bp,
-    application_bp,  
-    category_bp,     
-    task_bp          
-)
+# CORS Configuration
+CORS(app, origins="*", supports_credentials=True)
+
+# Token blocklist check
+from models import TokenBlocklist
+
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(jwt_header, jwt_payload):
+    jti = jwt_payload['jti']
+    return db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar() is not None
+
+# Register Blueprints (must be after app is initialized)
+from views import *
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(application_bp)
-app.register_blueprint(category_bp)
 app.register_blueprint(task_bp)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)

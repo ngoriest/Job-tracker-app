@@ -1,65 +1,57 @@
-from flask import Flask, request, jsonify, Blueprint
-from models import db, User
+from flask import Blueprint, request, jsonify
+from models import db, User, TokenBlocklist
 from werkzeug.security import check_password_hash
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
-from datetime import datetime
-from datetime import timezone
-
+from flask_jwt_extended import (
+    create_access_token,
+    jwt_required,
+    get_jwt_identity,
+    get_jwt
+)
+from datetime import datetime, timezone
 
 auth_bp = Blueprint("auth_bp", __name__)
 
-
-
-# login
 @auth_bp.route("/login", methods=["POST"])
 def login():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    data = request.get_json()
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "")
 
     if not email or not password:
-        return jsonify({"error": "email and password are required to login"}), 400
-     
+        return jsonify({"error": "Email and password are required"}), 400
+
     user = User.query.filter_by(email=email).first()
+    if not user or not check_password_hash(user.password, password):
+        return jsonify({"error": "Invalid email or password"}), 401
 
-    if user and check_password_hash(user.password, password):
-        access_token = create_access_token(identity=user.id)
-        return jsonify(access_token=access_token)     
+    access_token = create_access_token(identity=user.id)
 
-    else:
-        return jsonify({"error": "User does not exists/wrong details"}), 400
+    return jsonify({
+        "access_token": access_token,
+        "user_id": user.id,
+        "email": user.email
+    })
 
-    
-#  fetching logged in user
 @auth_bp.route("/current_user", methods=["GET"])
 @jwt_required()
-def fetch_current_user():
-    current_user_id = get_jwt_identity()
-
-    user = User.query.get(current_user_id)
+def current_user():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
 
     if not user:
         return jsonify({"error": "User not found"}), 404
 
-    user_data = {
+    return jsonify({
         "id": user.id,
-        "username": user.username,
         "email": user.email,
-        "is_admin": user.is_admin,
-        "is_blocked": user.is_blocked,
-        "created_at": user.created_at
-    }
-    return jsonify(user_data), 200
+        "is_admin": user.is_admin
+    })
 
-
-
-# Logout
-@auth_bp.route("/logout", methods=["DELETE"])
+@auth_bp.route("/logout", methods=["POST"])
 @jwt_required()
-def modify_token():
+def logout():
     jti = get_jwt()["jti"]
-    now = datetime.now(timezone.utc)
-
-    new_blocked_token =TokenBlocklist(jti=jti, created_at=now)
-    db.session.add(new_blocked_token)
+    db.session.add(TokenBlocklist(jti=jti, created_at=datetime.now(timezone.utc)))
     db.session.commit()
-    return jsonify({"success": "Successfully logged out"}), 200
+
+    return jsonify({"message": "Successfully logged out"})

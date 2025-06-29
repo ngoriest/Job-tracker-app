@@ -11,6 +11,9 @@ flask-mail = "*"
 flask = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
+email-validator = "*"
+flask-limiter = "*"
+python-dateutil = "*"
 
 [dev-packages]
 
