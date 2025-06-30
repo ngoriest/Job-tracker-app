@@ -30,7 +30,9 @@ jwt.init_app(app)
 migrate = Migrate(app, db)
 
 # CORS Configuration
-CORS(app, origins=["https://job-tracker-e2wbixv9v-ngoriests-projects.vercel.app"], supports_credentials=True)
+CORS(app, origins=[
+    "https://job-tracker-2ow6xha9i-ngoriests-projects.vercel.app"
+], supports_credentials=True)
 
 # Token blocklist check
 from models import TokenBlocklist
