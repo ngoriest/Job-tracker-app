@@ -1,4 +1,3 @@
-// src/services/api.js
 const BASE_URL = 'http://localhost:5000';
 
 export const apiFetch = async (endpoint, options = {}) => {

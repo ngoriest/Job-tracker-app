@@ -6,11 +6,13 @@ from flask_mail import Mail
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
+
+
 # Initialize Flask app
 app = Flask(__name__)
 
 # Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///job_tracker.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://job_tracker_app_user:hDKCbk6f4IS3c6gbqp9evWGH37tEqzRG@dpg-d1h4e87fte5s739a6sh0-a.oregon-postgres.render.com/job_tracker_app'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
