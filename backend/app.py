@@ -6,8 +6,6 @@ from flask_mail import Mail
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
-
-
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -34,7 +32,6 @@ migrate = Migrate(app, db)
 # CORS Configuration
 CORS(app, origins=["https://job-tracker-e2wbixv9v-ngoriests-projects.vercel.app"], supports_credentials=True)
 
-
 # Token blocklist check
 from models import TokenBlocklist
 
@@ -42,16 +39,15 @@ from models import TokenBlocklist
 def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
     jti = jwt_payload["jti"]
     token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
-
     return token is not None
 
-# Register Blueprints (must be after app is initialized)
+# Register Blueprints with /api prefix
 from views import *
 
-app.register_blueprint(auth_bp)
-app.register_blueprint(user_bp)
-app.register_blueprint(application_bp)
-app.register_blueprint(task_bp)
+app.register_blueprint(auth_bp, url_prefix="/api")
+app.register_blueprint(user_bp, url_prefix="/api")
+app.register_blueprint(application_bp, url_prefix="/api")
+app.register_blueprint(task_bp, url_prefix="/api")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
