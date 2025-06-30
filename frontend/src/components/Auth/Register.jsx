@@ -26,16 +26,36 @@ export default function Register() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-gray-800 shadow rounded">
-      <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+    <div className="max-w-md mx-auto mt-20 p-6 bg-white shadow rounded">
+      <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Register</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="username" value={form.username} onChange={handleChange} placeholder="Username"
-          className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded" />
-        <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email"
-          className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded" />
-        <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password"
-          className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded" />
-        <button type="submit" className="w-full bg-green-600 hover:bg-green-700 p-2 rounded">Register</button>
+        <input
+          type="text"
+          name="username"
+          value={form.username}
+          onChange={handleChange}
+          placeholder="Username"
+          className="w-full p-2 bg-white text-gray-800 border border-gray-300 rounded"
+        />
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          placeholder="Email"
+          className="w-full p-2 bg-white text-gray-800 border border-gray-300 rounded"
+        />
+        <input
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          placeholder="Password"
+          className="w-full p-2 bg-white text-gray-800 border border-gray-300 rounded"
+        />
+        <button type="submit" className="w-full bg-green-600 hover:bg-green-700 p-2 text-white rounded">
+          Register
+        </button>
       </form>
     </div>
   );

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL = 'https://job-tracker-app-xtf2.onrender.com/api';
 
 export const apiFetch = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
