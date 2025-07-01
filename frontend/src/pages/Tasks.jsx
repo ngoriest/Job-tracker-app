@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 export default function Tasks() {
   const [tasks, setTasks] = useState([]);
+  const [applications, setApplications] = useState([]);
   const [form, setForm] = useState({
     description: '',
     due_date: '',
@@ -12,17 +13,21 @@ export default function Tasks() {
   });
   const [editingId, setEditingId] = useState(null);
 
-  const fetchTasks = async () => {
+  const fetchData = async () => {
     try {
-      const data = await apiFetch('/tasks');
-      setTasks(data);
+      const [tasksData, appsData] = await Promise.all([
+        apiFetch('/tasks'),
+        apiFetch('/applications')
+      ]);
+      setTasks(tasksData);
+      setApplications(appsData.applications || appsData);
     } catch (err) {
       toast.error(err.message);
     }
   };
 
   useEffect(() => {
-    fetchTasks();
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -33,23 +38,28 @@ export default function Tasks() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        ...form,
+        due_date: form.due_date ? new Date(form.due_date).toISOString() : null
+      };
+
       if (editingId) {
         await apiFetch(`/tasks/${editingId}`, {
           method: 'PATCH',
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         });
         toast.success('Task updated');
       } else {
         await apiFetch('/tasks', {
           method: 'POST',
-          body: JSON.stringify(form),
+          body: JSON.stringify(payload),
         });
         toast.success('Task created');
       }
 
       setForm({ description: '', due_date: '', is_completed: false, application_id: '' });
       setEditingId(null);
-      fetchTasks();
+      fetchData();
     } catch (err) {
       toast.error(err.message);
     }
@@ -69,10 +79,15 @@ export default function Tasks() {
     try {
       await apiFetch(`/tasks/${id}`, { method: 'DELETE' });
       toast.success('Task deleted');
-      fetchTasks();
+      fetchData();
     } catch (err) {
       toast.error(err.message);
     }
+  };
+
+  const getApplicationName = (id) => {
+    const app = applications.find(a => a.id === id);
+    return app ? `${app.company} - ${app.job_title}` : 'No linked application';
   };
 
   return (
@@ -113,19 +128,39 @@ export default function Tasks() {
                 className="w-full px-3 py-2 border border-gray-300 rounded"
               />
             </div>
-            <div className="flex items-center pt-2">
-              <input
-                type="checkbox"
-                name="is_completed"
-                checked={form.is_completed}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Linked Application</label>
+              <select
+                name="application_id"
+                value={form.application_id}
                 onChange={handleChange}
-                className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-              <label className="ml-2 text-sm text-gray-700">Completed</label>
+                className="w-full px-3 py-2 border border-gray-300 rounded"
+              >
+                <option value="">None</option>
+                {applications.map(app => (
+                  <option key={app.id} value={app.id}>
+                    {app.company} - {app.job_title}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              name="is_completed"
+              checked={form.is_completed}
+              onChange={handleChange}
+              className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+            />
+            <label className="ml-2 text-sm text-gray-700">Completed</label>
+          </div>
+
+          <button 
+            type="submit" 
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          >
             {editingId ? 'Update Task' : 'Add Task'}
           </button>
 
@@ -152,7 +187,10 @@ export default function Tasks() {
           </div>
         ) : (
           tasks.map((task) => (
-            <div key={task.id} className={`bg-white rounded-lg shadow p-4 ${task.is_completed ? 'opacity-80' : ''}`}>
+            <div 
+              key={task.id} 
+              className={`bg-white rounded-lg shadow p-4 ${task.is_completed ? 'opacity-80' : ''} border-l-4 ${task.application_id ? 'border-blue-500' : 'border-gray-200'}`}
+            >
               <div className="flex items-start">
                 <input
                   type="checkbox"
@@ -161,7 +199,14 @@ export default function Tasks() {
                   className="mt-1 h-5 w-5 text-indigo-600 border-gray-300 rounded"
                 />
                 <div className="ml-3 flex-1">
-                  <p className={`text-gray-900 ${task.is_completed ? 'line-through' : ''}`}>{task.description}</p>
+                  <p className={`text-gray-900 ${task.is_completed ? 'line-through' : ''}`}>
+                    {task.description}
+                  </p>
+                  {task.application_id && (
+                    <p className="text-xs text-blue-600 mt-1">
+                      Linked to: {getApplicationName(task.application_id)}
+                    </p>
+                  )}
                   {task.due_date && (
                     <p className={`text-sm mt-1 ${
                       new Date(task.due_date) < new Date() && !task.is_completed
