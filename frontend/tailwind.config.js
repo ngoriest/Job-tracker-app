@@ -5,12 +5,12 @@ export default {
     extend: {
       colors: {
         primary: {
-          600: '#7c3aed',
-          700: '#6d28d9',
+          600: '#1E40AF',  // Darker blue
+          700: '#1E3A8A',
         },
-        dark: {
-          800: '#1e293b',
-          900: '#0f172a',
+        gray: {
+          800: '#1F2937',  // Standard dark gray
+          900: '#111827',  // Dark background
         }
       },
       animation: {

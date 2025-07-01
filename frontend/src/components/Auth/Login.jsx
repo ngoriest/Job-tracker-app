@@ -45,10 +45,8 @@ export default function Login({ setIsLoggedIn }) {
 
       localStorage.setItem('token', res.access_token);
       setIsLoggedIn(true);
-      toast.success('Login successful!', {
-        autoClose: 2000,
-        onClose: () => navigate('/dashboard', { replace: true }),
-      });
+      toast.success('Login successful!', { autoClose: 2000 });
+      setTimeout(() => navigate('/dashboard', { replace: true }), 2000);
     } catch (err) {
       console.error('Login error:', err);
       if (err.message.includes(':')) {
@@ -59,7 +57,7 @@ export default function Login({ setIsLoggedIn }) {
         });
         setErrors(errorObj);
       } else {
-        toast.error(err.message || 'Login failed. Please try again.');
+        toast.error(err.message || 'Login failed. Please try again.', { autoClose: 3000 });
       }
     } finally {
       setIsLoading(false);
@@ -67,10 +65,10 @@ export default function Login({ setIsLoggedIn }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4 py-12">
+      <div className="w-full max-w-md space-y-8 bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">
             Sign in to your account
           </h2>
         </div>
@@ -78,7 +76,7 @@ export default function Login({ setIsLoggedIn }) {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
                 Email address *
               </label>
               <input
@@ -89,15 +87,15 @@ export default function Login({ setIsLoggedIn }) {
                 value={form.email}
                 onChange={handleChange}
                 className={`w-full px-4 py-2 border ${
-                  errors.email ? 'border-red-500' : 'border-gray-300'
-                } rounded-md bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-transparent`}
+                  errors.email ? 'border-red-500' : 'border-gray-600'
+                } rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                 placeholder="your@email.com"
               />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+              {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
                 Password *
               </label>
               <div className="relative">
@@ -109,13 +107,13 @@ export default function Login({ setIsLoggedIn }) {
                   value={form.password}
                   onChange={handleChange}
                   className={`w-full px-4 py-2 border ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
-                  } rounded-md bg-white text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-transparent pr-10`}
+                    errors.password ? 'border-red-500' : 'border-gray-600'
+                  } rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -125,7 +123,7 @@ export default function Login({ setIsLoggedIn }) {
                   )}
                 </button>
               </div>
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+              {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
             </div>
           </div>
 
@@ -133,7 +131,7 @@ export default function Login({ setIsLoggedIn }) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70"
+              className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-70"
             >
               {isLoading ? (
                 <>
@@ -148,9 +146,9 @@ export default function Login({ setIsLoggedIn }) {
           </div>
         </form>
 
-        <div className="text-center text-sm text-gray-600">
+        <div className="text-center text-sm text-gray-400">
           Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
             Register here
           </Link>
         </div>

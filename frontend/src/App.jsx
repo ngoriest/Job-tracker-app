@@ -26,19 +26,39 @@ function App() {
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
-        newestOnTop={true}
+        newestOnTop
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
-        limit={3}
+        theme="dark"  // Changed to dark theme
       />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/register" element={<Register />} />
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute allowGuests>
+              <Home />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/login" 
+          element={
+            <ProtectedRoute allowGuests>
+              <Login setIsLoggedIn={setIsLoggedIn} />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/register" 
+          element={
+            <ProtectedRoute allowGuests>
+              <Register />
+            </ProtectedRoute>
+          } 
+        />
         <Route
           path="/dashboard"
           element={
