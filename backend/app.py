@@ -6,19 +6,18 @@ from flask_mail import Mail
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
-# Initialize Flask app
 app = Flask(__name__)
 
 # Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://job_tracker_app_user:hDKCbk6f4IS3c6gbqp9evWGH37tEqzRG@dpg-d1h4e87fte5s739a6sh0-a.oregon-postgres.render.com/job_tracker_app'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://your_db_connection_string'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'thee.manase@gmail.com'
-app.config['MAIL_PASSWORD'] = 'tpct fyni fwzb rsmv'
-app.config['MAIL_DEFAULT_SENDER'] = 'thee.manase@gmail.com'
-app.config['JWT_SECRET_KEY'] = 'absdbdbggdnjdirumf'
+app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
+app.config['MAIL_PASSWORD'] = 'your_app_password'
+app.config['MAIL_DEFAULT_SENDER'] = 'your_email@gmail.com'
+app.config['JWT_SECRET_KEY'] = 'your_jwt_secret'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=2)
 
 # Initialize extensions
@@ -30,7 +29,25 @@ jwt.init_app(app)
 migrate = Migrate(app, db)
 
 # CORS Configuration
-CORS(app) 
+CORS(app, 
+     resources={
+         r"/api/*": {
+             "origins": [
+                 "https://job-tracker-app-phi.vercel.app",
+                 "http://localhost:5173"
+             ],
+             "supports_credentials": True,
+             "allow_headers": ["Content-Type", "Authorization"],
+             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+         }
+     }
+)
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Expose-Headers'] = 'Authorization'
+    return response
 
 # Token blocklist check
 from models import TokenBlocklist
@@ -41,7 +58,7 @@ def check_if_token_revoked(jwt_header, jwt_payload: dict) -> bool:
     token = db.session.query(TokenBlocklist.id).filter_by(jti=jti).scalar()
     return token is not None
 
-# Register Blueprints with /api prefix
+# Register Blueprints
 from views import *
 
 app.register_blueprint(auth_bp, url_prefix="/api")

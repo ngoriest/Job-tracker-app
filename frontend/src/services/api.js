@@ -9,28 +9,24 @@ export const apiFetch = async (endpoint, options = {}) => {
 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
-  } else {
-    console.warn("🚫 No token found in localStorage");
   }
 
-  // Log outgoing request for debugging
-  if (options.method && options.body) {
-    console.log(`📤 [${options.method}] Sending to ${endpoint}:`, JSON.parse(options.body));
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      ...options,
+      headers,
+      credentials: 'include',
+      mode: 'cors'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Request failed');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
   }
-
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-    credentials: 'include',
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    console.error(`❌ API Error (${response.status}):`, errorData);
-    throw new Error(errorData.error || 'API Error');
-  }
-
-  const data = await response.json();
-  console.log(`✅ Response from ${endpoint}:`, data);
-  return data;
 };
