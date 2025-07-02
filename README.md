@@ -1,5 +1,8 @@
 # Job Tracker App
 
+VIDEO PRESENTATION
+https://www.loom.com/share/b8947c5061774f42b43fdc68fd3d882b?sid=007f3438-6d5f-4700-b404-28307c963b2c
+
 This is a job application tracking system built with a Flask backend and a React frontend. It allows users to register, log in, and manage job applications and related tasks.
 
 Date: 29/06/2025  
