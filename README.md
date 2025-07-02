@@ -24,11 +24,6 @@ The application includes:
 - Create tasks related to specific applications
 - Mark tasks as completed or pending
 
-### Admin Features (Optional)
-
-- View all users and applications
-- Manage inappropriate content
-- Edit or remove user content
 
 ## Setup and Installation
 
