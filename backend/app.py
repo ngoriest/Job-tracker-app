@@ -44,6 +44,23 @@ CORS(app, resources={
     }
 })
 
+# Debug CORS on
+@app.after_request
+def log_cors(response):
+    origin = request.headers.get('Origin')
+    print(f"Origin: {origin}")
+    print(f"CORS Headers: {dict(response.headers)}")
+    return response
+
+@app.route('/api/debug-cors')
+def debug_cors():
+    return jsonify({
+        "message": "CORS debug",
+        "origin": request.headers.get('Origin'),
+        "headers": dict(request.headers)
+    })
+
+
 # Token blocklist check
 from models import TokenBlocklist
 
