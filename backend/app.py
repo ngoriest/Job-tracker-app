@@ -33,20 +33,16 @@ migrate = Migrate(app, db)
 CORS(app, resources={
     r"/api/*": {
         "origins": [
-            # Production
-            "https://job-tracker-app-phi.vercel.app",
-            
-            # Preview deployments 
-            "https://job-tracker-app-*-ngoriests-projects.vercel.app",
-            
-            # Local development
-            "http://localhost:5173"
+            "https://*.vercel.app",  
+            "http://localhost:5173",
+            "http://localhost:3000",
+            "http://localhost:5000"  
         ],
         "supports_credentials": True,
         "methods": ["GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"]
     }
-}) 
+})
 
 # Token blocklist check
 from models import TokenBlocklist
