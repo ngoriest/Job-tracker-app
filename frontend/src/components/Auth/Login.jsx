@@ -65,92 +65,95 @@ export default function Login({ setIsLoggedIn }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4 py-12">
-      <div className="w-full max-w-md space-y-8 bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-white">
-            Sign in to your account
-          </h2>
-        </div>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-white">
+              Sign in to your account
+            </h2>
+            <p className="mt-2 text-white/80">Track your job applications</p>
+          </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-                Email address *
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={form.email}
-                onChange={handleChange}
-                className={`w-full px-4 py-2 border ${
-                  errors.email ? 'border-red-500' : 'border-gray-600'
-                } rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                placeholder="your@email.com"
-              />
-              {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
-                Password *
-              </label>
-              <div className="relative">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-1">
+                  Email address *
+                </label>
                 <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  value={form.password}
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={form.email}
                   onChange={handleChange}
-                  className={`w-full px-4 py-2 border ${
-                    errors.password ? 'border-red-500' : 'border-gray-600'
-                  } rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10`}
-                  placeholder="••••••••"
+                  className={`w-full px-4 py-3 bg-white/5 backdrop-blur-sm border ${
+                    errors.email ? 'border-red-500' : 'border-white/10'
+                  } rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                  placeholder="your@email.com"
                 />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5" aria-hidden="true" />
-                  )}
-                </button>
+                {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
               </div>
-              {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-white/80 mb-1">
+                  Password *
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    value={form.password}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 bg-white/5 backdrop-blur-sm border ${
+                      errors.password ? 'border-red-500' : 'border-white/10'
+                    } rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10`}
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/60 hover:text-white"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeSlashIcon className="h-5 w-5" aria-hidden="true" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && <p className="mt-1 text-sm text-red-400">{errors.password}</p>}
+              </div>
             </div>
-          </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-70"
-            >
-              {isLoading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Signing in...
-                </>
-              ) : 'Sign in'}
-            </button>
-          </div>
-        </form>
+            <div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-70"
+              >
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing in...
+                  </>
+                ) : 'Sign in'}
+              </button>
+            </div>
+          </form>
 
-        <div className="text-center text-sm text-gray-400">
-          Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300">
-            Register here
-          </Link>
+          <div className="text-center text-sm text-white/80 mt-6">
+            Don't have an account?{' '}
+            <Link to="/register" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
+              Register here
+            </Link>
+          </div>
         </div>
       </div>
     </div>

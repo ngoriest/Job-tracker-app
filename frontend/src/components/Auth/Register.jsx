@@ -41,56 +41,62 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4 py-12">
-      <div className="w-full max-w-md space-y-8 bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white">
-            Create an account
-          </h2>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {['username', 'email', 'password'].map((field) => (
-            <div key={field}>
-              <label className="block text-sm font-medium text-gray-300 capitalize mb-1">
-                {field} *
-              </label>
-              <input
-                type={field === 'password' ? 'password' : field === 'email' ? 'email' : 'text'}
-                name={field}
-                value={form[field]}
-                onChange={handleChange}
-                className={`w-full px-4 py-2 border ${
-                  errors[field] ? 'border-red-500' : 'border-gray-600'
-                } rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                placeholder={
-                  field === 'email' ? 'your@email.com' : 
-                  field === 'password' ? '••••••••' : 'Your username'
-                }
-              />
-              {errors[field] && <p className="mt-1 text-sm text-red-400">{errors[field]}</p>}
-            </div>
-          ))}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-70"
-          >
-            {isLoading ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Registering...
-              </>
-            ) : 'Register'}
-          </button>
-        </form>
-        <div className="text-center text-sm text-gray-400">
-          Already have an account?{' '}
-          <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300">
-            Login here
-          </Link>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-white">
+              Create an account
+            </h2>
+            <p className="mt-2 text-white/80">Start tracking your job applications</p>
+          </div>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {['username', 'email', 'password'].map((field) => (
+              <div key={field}>
+                <label className="block text-sm font-medium text-white/80 capitalize mb-1">
+                  {field} *
+                </label>
+                <input
+                  type={field === 'password' ? 'password' : field === 'email' ? 'email' : 'text'}
+                  name={field}
+                  value={form[field]}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 bg-white/5 backdrop-blur-sm border ${
+                    errors[field] ? 'border-red-500' : 'border-white/10'
+                  } rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                  placeholder={
+                    field === 'email' ? 'your@email.com' : 
+                    field === 'password' ? '••••••••' : 'Your username'
+                  }
+                />
+                {errors[field] && <p className="mt-1 text-sm text-red-400">{errors[field]}</p>}
+              </div>
+            ))}
+            
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-70"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Registering...
+                </>
+              ) : 'Register'}
+            </button>
+          </form>
+          
+          <div className="text-center text-sm text-white/80 mt-6">
+            Already have an account?{' '}
+            <Link to="/login" className="font-medium text-blue-400 hover:text-blue-300 transition-colors">
+              Login here
+            </Link>
+          </div>
         </div>
       </div>
     </div>

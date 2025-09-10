@@ -96,131 +96,157 @@ export default function Applications() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900">Job Applications</h2>
-        <div className="text-sm text-gray-600">
-          {applications.length} {applications.length === 1 ? 'application' : 'applications'}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Form */}
-        <div className="lg:col-span-1 bg-white rounded-lg shadow p-6">
-          <h3 className="text-xl font-semibold mb-4">{editingId ? 'Edit Application' : 'Add New Application'}</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {['company', 'job_title'].map((field) => (
-              <div key={field}>
-                <label className="block text-sm font-medium text-gray-700 capitalize">{field} *</label>
-                <input
-                  name={field}
-                  value={form[field]}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded border-gray-300 text-gray-900"
-                  required
-                />
-              </div>
-            ))}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Status</label>
-              <select name="status" value={form.status} onChange={handleChange} className="w-full px-3 py-2 border rounded border-gray-300">
-                <option>Applied</option>
-                <option>Interview</option>
-                <option>Offer</option>
-                <option>Rejected</option>
-              </select>
+    <div className="min-h-screen py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Page Header */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-6 md:p-8 mb-8 border border-white/20">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-white">Job Applications</h1>
+            <div className="text-white/80">
+              {applications.length} {applications.length === 1 ? 'application' : 'applications'}
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Application Date</label>
-                <input
-                  type="date"
-                  name="application_date"
-                  value={form.application_date}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded border-gray-300"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Deadline</label>
-                <input
-                  type="date"
-                  name="deadline"
-                  value={form.deadline}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded border-gray-300"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Notes</label>
-              <textarea
-                name="notes"
-                value={form.notes}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded border-gray-300"
-              />
-            </div>
-
-            <button type="submit" className="w-full bg-primary-600 text-white py-2 rounded hover:bg-primary-700">
-              {editingId ? 'Update Application' : 'Add Application'}
-            </button>
-            {editingId && (
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingId(null);
-                  setForm({
-                    company: '',
-                    job_title: '',
-                    status: 'Applied',
-                    application_date: '',
-                    deadline: '',
-                    notes: '',
-                  });
-                }}
-                className="w-full mt-2 text-sm text-gray-700 hover:underline"
-              >
-                Cancel
-              </button>
-            )}
-          </form>
+          </div>
+          <p className="text-white/80 mt-2">Track all your job applications in one place</p>
         </div>
 
-        {/* List */}
-        <div className="lg:col-span-2 space-y-4">
-          {applications.length === 0 ? (
-            <div className="p-6 bg-gray-100 rounded-lg text-center text-gray-600">
-              No applications yet. Add your first job application!
-            </div>
-          ) : (
-            applications.map((app) => (
-              <div key={app.id} className="bg-white rounded-lg shadow p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-xl font-semibold">{app.job_title}</h3>
-                    <p className="text-gray-600">{app.company}</p>
-                    <div className="mt-2 flex flex-wrap gap-2 text-sm">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">{app.status}</span>
-                      {app.deadline && (
-                        <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded">
-                          ⏰ {new Date(app.deadline).toLocaleDateString()}
-                        </span>
-                      )}
-                    </div>
-                    {app.notes && <p className="mt-3 text-gray-600">{app.notes}</p>}
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => handleEdit(app)} className="text-blue-600 hover:underline">Edit</button>
-                    <button onClick={() => handleDelete(app.id)} className="text-red-600 hover:underline">Delete</button>
-                  </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Form */}
+          <div className="lg:col-span-1 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-6 border border-white/20">
+            <h3 className="text-xl font-semibold text-white mb-4">{editingId ? 'Edit Application' : 'Add New Application'}</h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {['company', 'job_title'].map((field) => (
+                <div key={field}>
+                  <label className="block text-sm font-medium text-white/80 capitalize">{field} *</label>
+                  <input
+                    name={field}
+                    value={form[field]}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+              ))}
+
+              <div>
+                <label className="block text-sm font-medium text-white/80">Status</label>
+                <select 
+                  name="status" 
+                  value={form.status} 
+                  onChange={handleChange} 
+                  className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option>Applied</option>
+                  <option>Interview</option>
+                  <option>Offer</option>
+                  <option>Rejected</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-white/80">Application Date</label>
+                  <input
+                    type="date"
+                    name="application_date"
+                    value={form.application_date}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-white/80">Deadline</label>
+                  <input
+                    type="date"
+                    name="deadline"
+                    value={form.deadline}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
                 </div>
               </div>
-            ))
-          )}
+
+              <div>
+                <label className="block text-sm font-medium text-white/80">Notes</label>
+                <textarea
+                  name="notes"
+                  value={form.notes}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows="3"
+                />
+              </div>
+
+              <button 
+                type="submit" 
+                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              >
+                {editingId ? 'Update Application' : 'Add Application'}
+              </button>
+              
+              {editingId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingId(null);
+                    setForm({
+                      company: '',
+                      job_title: '',
+                      status: 'Applied',
+                      application_date: '',
+                      deadline: '',
+                      notes: '',
+                    });
+                  }}
+                  className="w-full mt-2 text-sm text-white/80 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+              )}
+            </form>
+          </div>
+
+          {/* List */}
+          <div className="lg:col-span-2 space-y-4">
+            {applications.length === 0 ? (
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 text-center text-white/80 border border-white/20">
+                No applications yet. Add your first job application!
+              </div>
+            ) : (
+              applications.map((app) => (
+                <div key={app.id} className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:border-white/40 transition-all duration-300">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-xl font-semibold text-white">{app.job_title}</h3>
+                      <p className="text-white/80">{app.company}</p>
+                      <div className="mt-2 flex flex-wrap gap-2 text-sm">
+                        <span className="bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full">{app.status}</span>
+                        {app.deadline && (
+                          <span className="bg-white/10 text-white/80 px-3 py-1 rounded-full">
+                            ⏰ {new Date(app.deadline).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                      {app.notes && <p className="mt-3 text-white/80">{app.notes}</p>}
+                    </div>
+                    <div className="flex gap-3">
+                      <button 
+                        onClick={() => handleEdit(app)} 
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(app.id)} 
+                        className="text-red-400 hover:text-red-300 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
